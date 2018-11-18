@@ -30,8 +30,8 @@ router.post('/register', function(req, res) {
             let token = jwt.sign({ id: user.id }, config.secret, {expiresIn: 86400 // expires in 24 hours
             });
             res.status(200).send({ auth: true, token: token, user: user });
-        }); 
-    }); 
+        });
+    });
 });
 
 router.post('/login', (req, res) => {
@@ -42,7 +42,18 @@ router.post('/login', (req, res) => {
         if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
         let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400 // expires in 24 hours
         });
+        console.log('Requete connexion :'+user)
         res.status(200).send({ auth: true, token: token, user: user });
+    });
+})
+router.post('/profile', (req, res) => {
+    console.log('debut de requete')
+    db.selectProfileById(req.body.userId, (err, userProfile) => {
+        if (err) return res.status(500).send('Error on the server.');
+        if (!userProfile) return res.status(404).send('No Profile user.');
+        console.log('Requete profile :'+userProfile)
+        res.status(200).send({ auth: true, userProfile: userProfile });
+
     });
 })
 
