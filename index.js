@@ -34,6 +34,20 @@ router.post('/register', function(req, res) {
     });
 });
 
+
+router.post('/agenda_event', function(req, res) {
+    db.insertEvent([
+            req.body.userId,
+            req.body.dateBegin,
+            req.body.dateEnd,
+            req.body.category,
+            req.body.reason,
+        ]);
+        res.status(200).send();
+});
+
+
+
 router.post('/login', (req, res) => {
     db.selectByEmail(req.body.email, (err, user) => {
         if (err) return res.status(500).send('Error on the server.');

@@ -44,6 +44,11 @@ class Db {
                       reason text)`
         return this.db.run(sql);
     }
+    insertEvent(event,) {
+        return this.db.run(
+            'INSERT INTO calendarEvent (userId,dateBegin,dateEnd, category, reason) VALUES (?,?,?,?,?)',
+            event)
+    }
 
     createTableContrat(){
         const sql= `CREATE TABLE IF NOT EXISTS contrat(
@@ -97,6 +102,8 @@ class Db {
                 callback(err)
             })
     }
+
+
 }
 
 module.exports = Db
