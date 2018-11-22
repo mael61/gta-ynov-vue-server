@@ -46,6 +46,17 @@ router.post('/agenda_event', function(req, res) {
         res.status(200).send();
 });
 
+router.post('/agendaPlanning',(req, res)=>{
+    console.log('route planning')
+
+    db.selectPlanningById(req.body.userId,(err,planning)=>{
+        if (err) return res.status(500).send('Error on the server.');
+        if (!planning) return res.status(404).send('No planning found');
+        console.log('Requete planning :' +planning)
+        res.status(200).send({ auth: true, planning: planning });
+    });
+})
+
 
 
 router.post('/login', (req, res) => {

@@ -44,10 +44,18 @@ class Db {
                       reason text)`
         return this.db.run(sql);
     }
-    insertEvent(event,) {
+    insertEvent(event) {
         return this.db.run(
             'INSERT INTO calendarEvent (userId,dateBegin,dateEnd, category, reason) VALUES (?,?,?,?,?)',
             event)
+    }
+
+    selectPlanningById(userId,callback){
+        return this.db.all(
+            `SELECT * FROM calendarEvent WHERE userId = ? `,
+            [userId],function(err,row) {
+                callback(err, row)
+            })
     }
 
     createTableContrat(){
