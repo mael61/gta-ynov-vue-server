@@ -9,6 +9,8 @@ class Db {
         this.createTableCalendarEvent();
         this.createTableContrat();
         this.createTableMeter();
+        this.createTableProfile();
+        this.createTableSupervisionUser();
     }
 
     createTableUser() {
@@ -20,6 +22,14 @@ class Db {
                 user_pass text,
                 role text)`
         return this.db.run(sql);
+    }
+
+    createTableSupervisionUser(){
+        const sql = `  CREATE TABLE IF NOT EXISTS supervisionUser(
+                      id integer PRIMARY KEY,
+                      adminId integer,
+                      userId integer)`
+        return this.db.run(sql)
     }
 
     createTableProfile(){
@@ -57,6 +67,16 @@ class Db {
                 callback(err, row)
             })
     }
+
+    selectSupervisionUser(userId,callback){
+        return this.db.all(
+            `SELECT * FROM user where id in (select userId FROM  supervisionUser where  adminId = ?)`,
+                [userId],function(err,row) {
+                callback(err, row)
+            })
+    }
+
+
 
     createTableContrat(){
         const sql= `CREATE TABLE IF NOT EXISTS contrat(

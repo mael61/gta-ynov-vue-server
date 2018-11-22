@@ -35,6 +35,8 @@ router.post('/register', function(req, res) {
 });
 
 
+
+
 router.post('/agenda_event', function(req, res) {
     db.insertEvent([
             req.body.userId,
@@ -52,12 +54,19 @@ router.post('/agendaPlanning',(req, res)=>{
     db.selectPlanningById(req.body.userId,(err,planning)=>{
         if (err) return res.status(500).send('Error on the server.');
         if (!planning) return res.status(404).send('No planning found');
-        console.log('Requete planning :' +planning)
         res.status(200).send({ auth: true, planning: planning });
     });
 })
 
+router.post('/supervision_user',(req,res)=>{
+    console.log('route supervision')
+    db.selectSupervisionUser(req.body.adminId,(err,user)=>{
+        if (err) return res.status(500).send('Error on the server.');
+        if (!user) return res.status(404).send('No user supervision found');
+        res.status(200).send({user: user})
+    })
 
+})
 
 router.post('/login', (req, res) => {
     db.selectByEmail(req.body.email, (err, user) => {
