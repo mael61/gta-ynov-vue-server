@@ -91,6 +91,29 @@ router.post('/profile', (req, res) => {
     });
 })
 
+router.post('/adminVoteEvent',(req,res)=>{
+    console.log('route check event')
+    if(req.body.vote!=true){
+        db.voteEvent(req.body.idEvent,2)
+        res.status(200).send();
+    }
+    else{
+        db.voteEvent(req.body.idEvent,1)
+        res.status(200).send();
+    }
+
+})
+
+router.post('/adminEventSupervision',(req,res)=>{
+    console.log('route permettant de visualiser les evenement non validée')
+    db.selectEventSupervision(req.body.adminId,(err,event)=>{
+        if (err) return res.status(500).send('Error on the server.');
+        if (!event) return res.status(404).send('No event.');
+        res.status(200).send({auth: true, event: event });
+    })
+})
+
+
 app.use(router)
 
 let port = process.env.PORT || 3000;

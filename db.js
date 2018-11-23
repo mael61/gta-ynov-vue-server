@@ -51,22 +51,38 @@ class Db {
                       dateBegin text,
                       dateEnd text,
                       category text,
-                      reason text)`
+                      reason text,
+                      verify integer)`
         return this.db.run(sql);
     }
     insertEvent(event) {
         return this.db.run(
-            'INSERT INTO calendarEvent (userId,dateBegin,dateEnd, category, reason) VALUES (?,?,?,?,?)',
+            'INSERT INTO calendarEvent (userId,dateBegin,dateEnd, category, reason,verify) VALUES (?,?,?,?,?,0)',
             event)
     }
 
     selectPlanningById(userId,callback){
         return this.db.all(
-            `SELECT * FROM calendarEvent WHERE userId = ? `,
+            `SELECT * FROM calendarEvent WHERE userId = ? and verify = '1' `,
             [userId],function(err,row) {
                 callback(err, row)
             })
     }
+
+    selectEventSupervision(userId,callback){
+        return this.db.all(
+            `SELECT * FROM calendarEvent where verify = 0 and userId in (select userId FROM  supervisionUser where  adminId = ?)`,
+            [userId],function(err,row) {
+                callback(err, row)
+            })
+
+    }
+
+    voteEvent(idEvent,vote){
+        return this.db.run( `UPDATE calendarEvent SET verify = ?  WHERE  id = ?`,vote,idEvent)
+    }
+
+
 
     selectSupervisionUser(userId,callback){
         return this.db.all(
