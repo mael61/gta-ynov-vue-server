@@ -49,12 +49,12 @@ router.post('/agenda_event', function(req, res) {
 });
 
 router.post('/agendaPlanning',(req, res)=>{
-    console.log('route planning')
+    console.log('route reccueperation event',req.body.userId ,req.body.verify)
 
-    db.selectPlanningById(req.body.userId,(err,planning)=>{
+    db.selectPlanningById(req.body.userId ,req.body.verify,(err,planning)=>{
         if (err) return res.status(500).send('Error on the server.');
         if (!planning) return res.status(404).send('No planning found');
-        res.status(200).send({ auth: true, planning: planning });
+        res.status(200).send({ auth: true, event: planning });
     });
 })
 

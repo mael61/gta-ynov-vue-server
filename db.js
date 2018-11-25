@@ -61,10 +61,10 @@ class Db {
             event)
     }
 
-    selectPlanningById(userId,callback){
+    selectPlanningById(userId,verify,callback){
         return this.db.all(
-            `SELECT * FROM calendarEvent WHERE userId = ? and verify = '1' `,
-            [userId],function(err,row) {
+            `SELECT * FROM calendarEvent WHERE userId = ? and verify = ? `,
+            [userId,verify],function(err,row) {
                 callback(err, row)
             })
     }
