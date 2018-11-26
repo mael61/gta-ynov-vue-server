@@ -15,7 +15,9 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 app.use(cors())
-
+/*
+ * Route insert User
+ * */
 router.post('/register', function(req, res) {
     db.insert([
         req.body.name,
@@ -34,7 +36,9 @@ router.post('/register', function(req, res) {
     });
 });
 
-
+/*
+ * Route insert Event congee ..
+ * */
 
 
 router.post('/agenda_event', function(req, res) {
@@ -48,6 +52,41 @@ router.post('/agenda_event', function(req, res) {
         res.status(200).send();
 });
 
+/*
+ * Route insert contrat ..
+ * */
+
+router.post('/insert_contrat', function(req, res) {
+    console.log('insert contrat')
+
+    db.insertContrat([
+        req.body.userId,
+        req.body.dateBegin,
+        req.body.dateEnd,
+        req.body.numberWeek,
+        req.body.hoursWeekly,
+        req.body.category,
+        req.body.reason
+    ]);
+    res.status(200).send();
+});
+
+router.post('/agenda_event', function(req, res) {
+    db.insertEvent([
+        req.body.userId,
+        req.body.dateBegin,
+        req.body.dateEnd,
+        req.body.category,
+        req.body.reason,
+    ]);
+    res.status(200).send();
+});
+
+
+/*
+ * Route permtant reccuperer tout les events du planning ..
+ * */
+
 router.post('/agendaPlanning',(req, res)=>{
     console.log('route reccueperation event',req.body.userId ,req.body.verify)
 
@@ -58,6 +97,10 @@ router.post('/agendaPlanning',(req, res)=>{
     });
 })
 
+
+/*
+ * Route permetant de reccuperer les salaries qui dependent d'un admin.
+ * */
 router.post('/supervision_user',(req,res)=>{
     console.log('route supervision')
     db.selectSupervisionUser(req.body.adminId,(err,user)=>{
@@ -67,6 +110,9 @@ router.post('/supervision_user',(req,res)=>{
     })
 
 })
+/*
+ * Route pour se logger
+ * */
 
 router.post('/login', (req, res) => {
     db.selectByEmail(req.body.email, (err, user) => {
@@ -80,6 +126,10 @@ router.post('/login', (req, res) => {
         res.status(200).send({ auth: true, token: token, user: user });
     });
 })
+
+/*
+ * Route pour afficher le profil et le contrat qui est connecter
+ * */
 router.post('/profile', (req, res) => {
     console.log('debut de requete')
     db.selectProfileById(req.body.userId, (err, userProfile) => {
@@ -89,7 +139,21 @@ router.post('/profile', (req, res) => {
         res.status(200).send({ auth: true, userProfile: userProfile });
 
     });
+
 })
+
+router.post('/profile_contrat', (req, res) => {
+    db.selectContratByUser(req.body.userId, (err, contrat) => {
+        if (err) return res.status(500).send('Error on the server.');
+        if (!contrat) return res.status(404).send('No contrat user.');
+        console.log('Requete contrat :' + contrat)
+        res.status(200).send({auth: true, contrat: contrat});
+    })
+})
+
+/*
+ * Route pour accepter ou refuser les congée 2=non 1=oui
+ * */
 
 router.post('/adminVoteEvent',(req,res)=>{
     console.log('route check event')
@@ -104,8 +168,11 @@ router.post('/adminVoteEvent',(req,res)=>{
 
 })
 
+/*
+ * Route pour visualiser les event non valider pour l'admin
+ * */
+
 router.post('/adminEventSupervision',(req,res)=>{
-    console.log('route permettant de visualiser les evenement non validée')
     db.selectEventSupervision(req.body.adminId,(err,event)=>{
         if (err) return res.status(500).send('Error on the server.');
         if (!event) return res.status(404).send('No event.');

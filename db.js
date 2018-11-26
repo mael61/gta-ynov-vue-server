@@ -92,6 +92,14 @@ class Db {
             })
     }
 
+    selectContratByUser(userId,callback){
+        return this.db.all(
+            `SELECT * FROM contrat WHERE userId = ? and inProgress = 1 `,
+            [userId],function(err,row) {
+                callback(err, row)
+            })
+    }
+
 
 
     createTableContrat(){
@@ -100,9 +108,11 @@ class Db {
                       userId integer,
                       dateBegin text,
                       dateEnd text,
+                      numberWeek integer ,
                       hoursWeekly integer,
-                      Etp integer,
-                      category text)`
+                      category text,
+                      reason text,
+                      inProgress integer)`
         return this.db.run(sql);
 
     }
@@ -145,6 +155,13 @@ class Db {
             user, (err) => {
                 callback(err)
             })
+    }
+
+    insertContrat(contrat){
+        return this.db.run(
+            'INSERT INTO contrat (userId,dateBegin,dateEnd,numberWeek, hoursWeekly,category,reason) VALUES (?,?,?,?,?,?,?)',
+            contrat, )
+
     }
 
 
