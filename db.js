@@ -100,6 +100,14 @@ class Db {
             })
     }
 
+    selectContratByAdmin(adminId,callback){
+        return this.db.all(
+            `SELECT * FROM contrat WHERE   inProgress is null and userId  in (select userId FROM  supervisionUser where  adminId = ?) `,
+            [adminId],function(err,row) {
+                callback(err, row)
+            })
+    }
+
 
 
     createTableContrat(){

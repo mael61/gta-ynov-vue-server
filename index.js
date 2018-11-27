@@ -151,6 +151,20 @@ router.post('/profile_contrat', (req, res) => {
     })
 })
 
+
+
+router.post('/admin_contrat', (req, res) => {
+    console.log('reccup contrat '+ req.body.adminId)
+    db.selectContratByAdmin(req.body.adminId, (err, contrat) => {
+        if (err) return res.status(500).send('Error on the server.');
+        if (!contrat) return res.status(404).send('No contrat user.');
+        console.log('Requete contrat :' + contrat)
+        res.status(200).send({auth: true, contrat: contrat});
+    })
+})
+
+
+
 /*
  * Route pour accepter ou refuser les congée 2=non 1=oui
  * */
