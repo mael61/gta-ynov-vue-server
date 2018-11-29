@@ -82,6 +82,9 @@ class Db {
         return this.db.run( `UPDATE calendarEvent SET verify = ?  WHERE  id = ?`,vote,idEvent)
     }
 
+    updateProfil(surname,name,birth,tel,address,userId){
+        return this.db.run(`UPDATE userProfile SET surname  = ?,name = ? , birth = ?,tel = ? , address= ?  where userId = ?`, surname,name,birth,tel,address,userId)
+    }
 
 
     selectSupervisionUser(userId,callback){

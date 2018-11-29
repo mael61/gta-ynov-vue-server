@@ -89,7 +89,6 @@ router.post('/agenda_event', function(req, res) {
 
 router.post('/agendaPlanning',(req, res)=>{
     console.log('route reccueperation event',req.body.userId ,req.body.verify)
-
     db.selectPlanningById(req.body.userId ,req.body.verify,(err,planning)=>{
         if (err) return res.status(500).send('Error on the server.');
         if (!planning) return res.status(404).send('No planning found');
@@ -97,6 +96,21 @@ router.post('/agendaPlanning',(req, res)=>{
     });
 })
 
+
+
+router.post('/profile_update',(req,res)=>{
+    console.log('update')
+    db.updateProfil([
+        req.body.surname,
+        req.body.name,
+        req.body.birth,
+        req.body.tel,
+        req.body.address,
+        req.body.userId
+    ]);
+    res.status(200).send
+
+})
 
 /*
  * Route permetant de reccuperer les salaries qui dependent d'un admin.
